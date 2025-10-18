@@ -1,7 +1,5 @@
 # Gestión Servicio Trinity — Frontend
 
-Documentación básica para un desarrollador que abre este repositorio por primera vez.
-
 ## Resumen
 
 Aplicación frontend React + TypeScript creada con Vite para la plataforma "Consorcio de agua". Código organizado por dominios (admin, operator, user, auth, shared, etc.). Assets estáticos en `public/`.
