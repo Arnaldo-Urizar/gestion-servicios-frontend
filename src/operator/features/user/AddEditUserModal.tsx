@@ -14,13 +14,25 @@ interface AddEditModalProps {
   fees: FeeDto[];
 }
 
-const AddEditModal: React.FC<AddEditModalProps> = ({ show, onHide, onSave, user, locations, fees }) => {
-
+const AddEditModal: React.FC<AddEditModalProps> = ({
+  show,
+  onHide,
+  onSave,
+  user,
+  locations,
+  fees,
+}) => {
   // Estados
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Props para manejar formulario 
-  const { register, handleSubmit, reset, formState: { errors }, setValue } = useForm<UserDto>({
+  // Props para manejar formulario
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+    setValue,
+  } = useForm<UserDto>({
     defaultValues: user || {},
   });
 
@@ -38,6 +50,12 @@ const AddEditModal: React.FC<AddEditModalProps> = ({ show, onHide, onSave, user,
       if (!user) {
         data.password = data.dni?.toString(); // Asegurar que la contraseña sea igual al DNI al crear
       }
+
+      // Si numberMeter no existe, usar serialNumber como valor por defecto
+      if (data.residenceDto && !data.residenceDto.numberMeter) {
+        data.residenceDto.numberMeter = data.residenceDto.serialNumber;
+      }
+
       await onSave(data);
       reset();
     } catch (error) {
@@ -48,7 +66,13 @@ const AddEditModal: React.FC<AddEditModalProps> = ({ show, onHide, onSave, user,
   };
 
   return (
-    <Modal show={show} onHide={onHide} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+    <Modal
+      show={show}
+      onHide={onHide}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
       <Modal.Header closeButton>
         <Modal.Title>{user ? "Editar Usuario" : "Añadir Usuario"}</Modal.Title>
       </Modal.Header>
@@ -59,7 +83,9 @@ const AddEditModal: React.FC<AddEditModalProps> = ({ show, onHide, onSave, user,
               <Form.Group>
                 <Form.Label>Nombre</Form.Label>
                 <Form.Control
-                  {...register("firstName", { required: "Este campo es obligatorio" })}
+                  {...register("firstName", {
+                    required: "Este campo es obligatorio",
+                  })}
                   isInvalid={!!errors.firstName}
                 />
                 <Form.Control.Feedback type="invalid">
@@ -71,7 +97,9 @@ const AddEditModal: React.FC<AddEditModalProps> = ({ show, onHide, onSave, user,
               <Form.Group>
                 <Form.Label>Apellido</Form.Label>
                 <Form.Control
-                  {...register("lastName", { required: "Este campo es obligatorio" })}
+                  {...register("lastName", {
+                    required: "Este campo es obligatorio",
+                  })}
                   isInvalid={!!errors.lastName}
                 />
                 <Form.Control.Feedback type="invalid">
@@ -85,7 +113,9 @@ const AddEditModal: React.FC<AddEditModalProps> = ({ show, onHide, onSave, user,
               <Form.Group>
                 <Form.Label>Email</Form.Label>
                 <Form.Control
-                  {...register("username", { required: "Este campo es obligatorio" })}
+                  {...register("username", {
+                    required: "Este campo es obligatorio",
+                  })}
                   isInvalid={!!errors.username}
                 />
                 <Form.Control.Feedback type="invalid">
@@ -98,7 +128,9 @@ const AddEditModal: React.FC<AddEditModalProps> = ({ show, onHide, onSave, user,
                 <Form.Group>
                   <Form.Label>Estado</Form.Label>
                   <Form.Select
-                    {...register("status", { required: "Este campo es obligatorio" })}
+                    {...register("status", {
+                      required: "Este campo es obligatorio",
+                    })}
                     isInvalid={!!errors.status}
                   >
                     <option value="ACTIVE">Activo</option>
@@ -117,7 +149,13 @@ const AddEditModal: React.FC<AddEditModalProps> = ({ show, onHide, onSave, user,
                 <Form.Label>DNI</Form.Label>
                 <Form.Control
                   type="number"
-                  {...register("dni", { required: "Este campo es obligatorio", maxLength: { value: 8, message: "El DNI debe tener 8 números" } })}
+                  {...register("dni", {
+                    required: "Este campo es obligatorio",
+                    maxLength: {
+                      value: 8,
+                      message: "El DNI debe tener 8 números",
+                    },
+                  })}
                   isInvalid={!!errors.dni}
                 />
                 <Form.Control.Feedback type="invalid">
@@ -129,7 +167,13 @@ const AddEditModal: React.FC<AddEditModalProps> = ({ show, onHide, onSave, user,
               <Form.Group>
                 <Form.Label>Teléfono</Form.Label>
                 <Form.Control
-                  {...register("phone", { required: "Este campo es obligatorio", maxLength: { value: 10, message: "El teléfono no puede tener más de 10 números" } })}
+                  {...register("phone", {
+                    required: "Este campo es obligatorio",
+                    maxLength: {
+                      value: 10,
+                      message: "El teléfono no puede tener más de 10 números",
+                    },
+                  })}
                   isInvalid={!!errors.phone}
                 />
                 <Form.Control.Feedback type="invalid">
@@ -143,11 +187,17 @@ const AddEditModal: React.FC<AddEditModalProps> = ({ show, onHide, onSave, user,
               <Form.Group>
                 <Form.Label>Localidad</Form.Label>
                 <Form.Select
-                  {...register("residenceDto.idLocation", { required: "Este campo es obligatorio" })}
-                  isInvalid={!!errors.residenceDto?.idLocation}>
+                  {...register("residenceDto.idLocation", {
+                    required: "Este campo es obligatorio",
+                  })}
+                  isInvalid={!!errors.residenceDto?.idLocation}
+                >
                   <option value="">Seleccione una localidad</option>
                   {locations.map((location) => (
-                    <option key={location.idLocation} value={location.idLocation}>
+                    <option
+                      key={location.idLocation}
+                      value={location.idLocation}
+                    >
                       {location.name}
                     </option>
                   ))}
@@ -161,7 +211,9 @@ const AddEditModal: React.FC<AddEditModalProps> = ({ show, onHide, onSave, user,
               <Form.Group>
                 <Form.Label>Distrito</Form.Label>
                 <Form.Control
-                  {...register("residenceDto.district", { required: "Este campo es obligatorio" })}
+                  {...register("residenceDto.district", {
+                    required: "Este campo es obligatorio",
+                  })}
                   isInvalid={!!errors.residenceDto?.district}
                 />
                 <Form.Control.Feedback type="invalid">
@@ -175,7 +227,9 @@ const AddEditModal: React.FC<AddEditModalProps> = ({ show, onHide, onSave, user,
               <Form.Group>
                 <Form.Label>Calle</Form.Label>
                 <Form.Control
-                  {...register("residenceDto.street", { required: "Este campo es obligatorio" })}
+                  {...register("residenceDto.street", {
+                    required: "Este campo es obligatorio",
+                  })}
                   isInvalid={!!errors.residenceDto?.street}
                 />
                 <Form.Control.Feedback type="invalid">
@@ -188,7 +242,9 @@ const AddEditModal: React.FC<AddEditModalProps> = ({ show, onHide, onSave, user,
                 <Form.Label>N° de Casa</Form.Label>
                 <Form.Control
                   type="number"
-                  {...register("residenceDto.number", { required: "Este campo es obligatorio" })}
+                  {...register("residenceDto.number", {
+                    required: "Este campo es obligatorio",
+                  })}
                   isInvalid={!!errors.residenceDto?.number}
                 />
                 <Form.Control.Feedback type="invalid">
@@ -200,10 +256,13 @@ const AddEditModal: React.FC<AddEditModalProps> = ({ show, onHide, onSave, user,
           <Row>
             <Col>
               <Form.Group>
-                <Form.Label>N° de Medidor</Form.Label>
+                <Form.Label>N° de Serie del Medidor</Form.Label>
                 <Form.Control
-                  {...register("residenceDto.serialNumber", { required: "Este campo es obligatorio" })}
+                  {...register("residenceDto.serialNumber", {
+                    required: "Este campo es obligatorio",
+                  })}
                   isInvalid={!!errors.residenceDto?.serialNumber}
+                  placeholder="Ej: E789123"
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.residenceDto?.serialNumber?.message}
@@ -212,9 +271,25 @@ const AddEditModal: React.FC<AddEditModalProps> = ({ show, onHide, onSave, user,
             </Col>
             <Col>
               <Form.Group>
+                <Form.Label>N° de Medidor</Form.Label>
+                <Form.Control
+                  {...register("residenceDto.numberMeter")}
+                  placeholder="Ej: 12345 (opcional)"
+                />
+                <Form.Text className="text-muted">
+                  Si se deja vacío, se usará el N° de Serie
+                </Form.Text>
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Form.Group>
                 <Form.Label>Tarifa</Form.Label>
                 <Form.Select
-                  {...register("residenceDto.idFee", { required: "Este campo es obligatorio" })}
+                  {...register("residenceDto.idFee", {
+                    required: "Este campo es obligatorio",
+                  })}
                   isInvalid={!!errors.residenceDto?.idFee}
                 >
                   <option value="">Seleccione una tarifa</option>
@@ -229,11 +304,17 @@ const AddEditModal: React.FC<AddEditModalProps> = ({ show, onHide, onSave, user,
                 </Form.Control.Feedback>
               </Form.Group>
             </Col>
+            <Col>{/* Columna vacía para mantener el diseño */}</Col>
           </Row>
           <Button className="mt-2" type="submit" disabled={isSubmitting}>
             {isSubmitting ? "Guardando..." : "Guardar"}
           </Button>
-          <Button className="mt-2 ms-2" variant="secondary" onClick={onHide} disabled={isSubmitting}>
+          <Button
+            className="mt-2 ms-2"
+            variant="secondary"
+            onClick={onHide}
+            disabled={isSubmitting}
+          >
             Cancelar
           </Button>
         </Form>

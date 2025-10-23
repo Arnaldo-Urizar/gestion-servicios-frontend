@@ -14,12 +14,14 @@ export interface UserDto {
   residenceDto: ResidenceDto;
 }
 
-interface ResidenceDto {
-  idLocation: number;
-  idResidence: number;
+// ResidenceDto.ts en el frontend
+export interface ResidenceDto {
+  idResidence?: number | null;
+  idLocation: string;
   district: string;
   street: string;
-  number: number;
-  serialNumber: string;
-  idFee: number;
+  number: string; // Número de casa
+  serialNumber: string; // Serial del medidor
+  numberMeter: string; // Número del medidor físico
+  idFee: string;
 }
