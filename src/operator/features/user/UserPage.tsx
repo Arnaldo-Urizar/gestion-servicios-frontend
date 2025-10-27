@@ -70,9 +70,7 @@ const UserPage = () => {
     setFilteredData(filtered);
   };
 
-  // Manejar añadir/editar
-  // Manejar añadir/editar
-  // Manejar añadir/editar
+
   // Manejar añadir/editar
   const handleSave = async (user: UserDto) => {
     try {
@@ -88,7 +86,7 @@ const UserPage = () => {
 
         console.log("📤 Datos a enviar:", JSON.stringify(user, null, 2)); // ← DEBUGGING
 
-        await updateData("/user/update", user.idUser, user);
+        await updateData("/user/update?idUser", user.idUser, user);
         toast.success("Usuario actualizado exitosamente");
       }
       // Añadir registro

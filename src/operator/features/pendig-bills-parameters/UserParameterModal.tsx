@@ -68,7 +68,7 @@ const UserParametersModal: React.FC<UserParametersModalProps> = ({ show, onHide,
     const handleSave = async (idPendingBillDetail: number) => {
         setSaving(true);
         try {
-            await updateData(`/operator/pending-details/update?idReading=`, idPendingBillDetail, { idBillingParameter: tempData.billingParameterId, value: tempData.value }
+            await updateData(`/operator/pending-details/update?idReading`, idPendingBillDetail, { idBillingParameter: tempData.billingParameterId, value: tempData.value }
             );
             toast.success("Concepto actualizado");
             setParameters(parameters.map(p => p.idPendingBillDetail === idPendingBillDetail ? {

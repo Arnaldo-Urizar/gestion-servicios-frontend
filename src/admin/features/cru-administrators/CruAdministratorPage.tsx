@@ -55,7 +55,7 @@ const CruAdministratorPage = () => {
         try {
             //Actualizar registro
             if (administrator.idUser) {
-                await updateData("/operator/update-user?idUser", administrator.idUser, administrator);
+                await updateData("/user/update?idUser", administrator.idUser, administrator);
                 toast.success("Administrador actualizado exitosamente");
             }
             // Añadir registro

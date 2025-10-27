@@ -50,7 +50,6 @@ export const addData = async <T>(endpoint: string, data: T): Promise<T> => {
   }
 };
 
-//Funcion para actualizar datos
 //Función para actualizar datos
 export const updateData = async <T>(
   endpoint: string,
@@ -58,9 +57,8 @@ export const updateData = async <T>(
   data: Partial<T>
 ): Promise<T> => {
   try {
-    // La llamada axios debe estar DENTRO del try
     const response = await axiosInstance.put<WebApiResponse<T>>(
-      `${endpoint}?idUser=${id}`,
+      `${endpoint}=${id}`,
       data
     );
 

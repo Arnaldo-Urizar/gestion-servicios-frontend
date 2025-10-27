@@ -51,7 +51,7 @@ const handleUpdateUser = async () => {
         };
 
         // Enviar el objeto completo al endpoint
-        await updateData("/user/update", userId, updatedUser);
+        await updateData("/user/update?idUser", userId, updatedUser);
         toast.success("Datos actualizados exitosamente");
     } catch (error) {
         console.error(error);
@@ -70,7 +70,7 @@ const handleUpdateUser = async () => {
 
         setLoading(true);
         try {
-            await updateData("/user/change-password", userId, newPassword);
+            await updateData("/user/change-password?idUser", userId, newPassword);
             toast.success("Contraseña actualizada exitosamente");
             setShowPasswordFields(false); // Oculta los campos de contraseña después de la actualización
         } catch (error) {
@@ -87,7 +87,7 @@ const handleUpdateUser = async () => {
 
         setLoading(true);
         try {
-            await updateData("/user/change-digital-invoice", userId, adhered);
+            await updateData("/user/change-digital-invoice?idUser", userId, adhered);
             setUser({ ...user, digitalInvoiceAdhered: adhered });
             toast.success("Suscripción a factura digital actualizada");
         } catch (error) {
