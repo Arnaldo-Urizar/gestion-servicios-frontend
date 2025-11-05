@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Container, Row, Col, Spinner, Card } from 'react-bootstrap';
+import ExcelJS from "exceljs";
 import { saveAs } from 'file-saver';
-import * as XLSX from 'xlsx';
 import { getData } from '../../../core/services/apiService';
 import { PeopleFill, Cash, FileEarmarkText, Activity } from 'react-bootstrap-icons';
 import './ReportPage.css';
@@ -34,12 +34,18 @@ const ReportPage = () => {
             exclude: ['password', 'residenceDto_idLocation', 'residenceDto_idResidence'],
             rename: {
                 'idUser': 'ID Usuario',
+                'username': 'Usuario',
                 'firstName': 'Nombre',
                 'lastName': 'Apellido',
+                'phone': 'Teléfono',
+                'status': 'Estado',
+                'dateRegister': 'Registro',
+                'digitalInvoiceAdhered': 'Factura digital',
                 'residenceDto_district': 'Distrito',
                 'residenceDto_street': 'Calle',
                 'residenceDto_number': 'Número',
                 'residenceDto_serialNumber': 'Número Serie',
+                'residenceDto_numberMeter': 'Número Medidor',
                 'residenceDto_idFee': 'Tarifa'
             }
         },
@@ -50,9 +56,12 @@ const ReportPage = () => {
             endpoint: '/operator/billing-parameter/active',
             variant: 'success',
             rename: {
-                'idBill': 'N° Factura',
-                'total': 'Total',
-                'consumption': 'Consumo (kW)'
+                'idBillingParameter': 'Id',
+                'name': 'Parámetro',
+                'description': 'Descripción',
+                'value': 'Valor',
+                'status': 'Estado',
+                'applyCondition': 'Condición'
             }
         },
         {
@@ -61,40 +70,103 @@ const ReportPage = () => {
             Icon: Cash,
             endpoint: '/operator/fee',
             variant: 'warning',
-            exclude: ['user_password']
+            exclude: ['user_password'],
+            rename: {
+                'idFee': 'Id Tarifa',
+                'name': 'Nombre',
+                'description': 'Descripción',
+                'price': 'Precio',
+                'consumptionMax': ' Consumo Máximo',
+                'surplusChargePerUnit': 'Cargo adicional'
+            }
         },
         {
             id: 'activity',
             title: 'Información del Sistema',
             Icon: Activity,
-            endpoint: '/operator/footer',
-            variant: 'danger'
+            endpoint: '/info/footer',
+            variant: 'danger',
+            rename: {
+                'name':'Nombre',
+                'slogan':'Eslogan',
+                'province':'Provincia',
+                'location':'Ubicacion',
+                'district':'Distrito',
+                'street':'Calle',
+                'facebookUrl':'Facebook',
+                'whatsappUrl':'Whatsapp',
+                'instagramUrl':'Instagram'
+            }
         }
     ];
 
-    // Funcion para manejar la generación de reportes
+    // // Funcion para manejar la generación de reportes
     const handleGenerateReport = async (report: ReportConfig) => {
         setLoadingReport(report.id);
+
         try {
             const data = await getData<any[]>(report.endpoint);
-
             const processedData = processReportData(data, {
                 exclude: report.exclude,
-                rename: report.rename
+                rename: report.rename,
             });
 
-            const worksheet = XLSX.utils.json_to_sheet(processedData);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, report.title.substring(0, 31));
+            // Crea libro y hoja
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet(report.title);
 
-            const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-            const blob = new Blob([excelBuffer], {
-                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            // Configura columnas dinámicamente
+            worksheet.columns = Object.keys(processedData[0] || {}).map((key) => ({
+                header: key,
+                key,
+                width: Math.max(key.length + 5, 15),
+            }));
+
+            // Estilos del encabezado
+            const headerRow = worksheet.getRow(1);
+            headerRow.eachCell((cell) => {
+                cell.font = { bold: true, color: { argb: "FFFFFFFF" }, size: 12 };
+                cell.fill = {
+                    type: "pattern",
+                    pattern: "solid",
+                    fgColor: { argb: "4472C4" },
+                };
+                cell.alignment = { horizontal: "center", vertical: "middle" };
+                cell.border = {
+                    top: { style: "thin", color: { argb: "CCCCCC" } },
+                    left: { style: "thin", color: { argb: "CCCCCC" } },
+                    bottom: { style: "thin", color: { argb: "CCCCCC" } },
+                    right: { style: "thin", color: { argb: "CCCCCC" } },
+                };
             });
 
-            saveAs(blob, `${report.title}_${new Date().toISOString().split('T')[0]}.xlsx`);
+            //Argega los datos
+            processedData.forEach((rowData) => {
+                const row = worksheet.addRow(rowData);
+                row.eachCell((cell) => {
+                    cell.alignment = { horizontal: "center", vertical: "middle" };
+                    cell.border = {
+                    top: { style: "thin", color: { argb: "DDDDDD" } },
+                    left: { style: "thin", color: { argb: "DDDDDD" } },
+                    bottom: { style: "thin", color: { argb: "DDDDDD" } },
+                    right: { style: "thin", color: { argb: "DDDDDD" } },
+                    };
+                });
+            });
+
+            headerRow.height = 22;
+
+            // Descargar archivo
+            const buffer = await workbook.xlsx.writeBuffer();
+            saveAs(
+                new Blob([buffer], {
+                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                }),
+                `${report.title}_${new Date().toISOString().split("T")[0]}.xlsx`
+            );
+
         } catch (error) {
-            console.error('Error generando reporte:', error);
+            console.error("Error generando reporte:", error);
             alert(`Error al generar ${report.title}`);
         } finally {
             setLoadingReport(null);
@@ -104,7 +176,7 @@ const ReportPage = () => {
     // Render
     return (
         <div className="report-page">
-            <h1 className="text-center mb-5">Generador de Reportes</h1>
+            <h1 className="text-center mb-5">Gestión de Reportes</h1>
             <Container>
                 <Row className="g-4" xs={1} md={2} lg={4}>
                     {REPORTS.map((report) => (
@@ -116,7 +188,7 @@ const ReportPage = () => {
                             >
                                 <Card.Body className="d-flex flex-column justify-content-center align-items-center">
                                     <report.Icon className="report-icon" />
-                                    <h3 className="report-title mt-3">{report.title}</h3>
+                                    <h3 className="report-title mt-3 text-center">{report.title}</h3>
                                     {loadingReport === report.id ? (
                                         <Spinner animation="border" variant="light" className="mt-2" />
                                     ) : (

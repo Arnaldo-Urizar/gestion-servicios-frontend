@@ -23,7 +23,10 @@ export const processReportData = (
     rename?: Record<string, string>;
   } = {}
 ) => {
-  return data.map(item => {
+
+  const arrayData = Array.isArray(data) ? data : [data];
+
+  return arrayData.map(item => {
     let flattened = flattenObject(item);
 
     // Eliminar campos excluidos
