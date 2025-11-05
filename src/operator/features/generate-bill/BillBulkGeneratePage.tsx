@@ -16,7 +16,8 @@ const BillBulkGeneratePage = () => {
         setIsLoading(true);
         try {
             const periodParam = selectedDate ? selectedDate.toISOString() : null;
-            await addData(`/bill/generate-auto/${periodParam}`, {});
+            console.log(periodParam)
+            await addData(`/operator/bill/generate-auto/${periodParam}`, {});
             toast.success('Facturas generadas exitosamente');
             setSelectedDate(null);
         } catch (error) {
