@@ -50,9 +50,10 @@ const LoginPage = () => {
                                 <form onSubmit={handleSubmit}>
                                     {error && <div className="alert alert-danger">{error}</div>}
                                     <div className="mb-3">
-                                        <label className="form-label">Nombre de usuario</label>
+                                        <label className="form-label">Usuario</label>
                                         <input
                                             type="text"
+                                            placeholder='Ingresa tu correo electrónico'
                                             className="form-control"
                                             name="username"
                                             value={username}
@@ -65,6 +66,7 @@ const LoginPage = () => {
                                         <label className="form-label">Contraseña</label>
                                         <input
                                             type="password"
+                                            placeholder='Ingresa tu contraseña'
                                             className="form-control"
                                             name="password"
                                             value={password}

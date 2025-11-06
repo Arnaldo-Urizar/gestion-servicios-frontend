@@ -17,9 +17,8 @@ const ForgotPasswordPage = () => {
     try {
       await AuthService.recoverPassword(credentials);
       setSuccess(true);
-    } catch (error) {
-      setError("Error al enviar el correo. Intenta nuevamente.");
-      console.error(error);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'No se puedo enviar el correo, inténtalo más tarde');
     } finally {
       setLoading(false);
     }
@@ -41,9 +40,10 @@ const ForgotPasswordPage = () => {
                   <>
                     {error && <div className="alert alert-danger">{error}</div>}
                     <div className="mb-3">
-                      <label className="form-label">Correo Electrónico</label>
+                      <label className="form-label">Email</label>
                       <input
                         type="email"
+                        placeholder="Ingresa tu correo electrónico"
                         className="form-control"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}

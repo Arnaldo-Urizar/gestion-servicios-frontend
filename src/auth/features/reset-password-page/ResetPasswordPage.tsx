@@ -5,6 +5,7 @@ import { RecoverPassDto } from "../../../core/models/dto/RecoverPassDto";
 
 const ResetPasswordPage = () => {
     const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("")
     const [error, setError] = useState("");
     const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -15,20 +16,27 @@ const ResetPasswordPage = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError("");
         if (!token) {
             setError("Token inválido o faltante.");
             return;
         }
+        if(newPassword !== confirmPassword){
+            setError("Las contraseñas no coinciden.")
+            return
+        }
+        if (newPassword.length < 8) {
+            setError('La contraseña debe tener al menos 8 caracteres.');
+            return;
+        }
         setLoading(true);
-        setError("");
         const credentials: RecoverPassDto = { token, newPassword };
         try {
             await AuthService.changePassword(credentials);
             setSuccess(true);
             setTimeout(() => navigate("/login"), 3000);
-        } catch (error) {
-            setError("Error al restablecer la contraseña. Intenta nuevamente.");
-            console.error(error);
+        } catch (e) {
+            setError(e instanceof Error ? e.message : 'No se puedo restablecer la contraseña, Intenténtalo nuevamente.');
         } finally {
             setLoading(false);
         }
@@ -53,9 +61,22 @@ const ResetPasswordPage = () => {
                                         <label className="form-label">Nueva Contraseña</label>
                                         <input
                                             type="password"
+                                            placeholder="Ingresa tu nueva contraseña"
                                             className="form-control"
                                             value={newPassword}
                                             onChange={(e) => setNewPassword(e.target.value)}
+                                            required
+                                            disabled={loading}
+                                        />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className="form-label">Confirmar Contraseña</label>
+                                        <input
+                                            type="password"
+                                            placeholder="Repite tu nueva contraseña"
+                                            className="form-control"
+                                            value={confirmPassword}
+                                            onChange={(e) => setConfirmPassword(e.target.value)}
                                             required
                                             disabled={loading}
                                         />
