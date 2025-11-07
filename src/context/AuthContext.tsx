@@ -34,6 +34,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       const response = await AuthService.login(credentials);
       setToken(response.token);
+      const decoded = parseJwt(response.token)
+      if (!decoded?.role) throw new Error("Token inválido.");
+      return decoded.role 
     } catch (error) {
       setToken(null);
       throw error;

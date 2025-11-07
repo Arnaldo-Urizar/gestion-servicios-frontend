@@ -15,6 +15,12 @@ const LoginPage = () => {
     const { login } = useAuth();
     const navigate = useNavigate();
 
+    const roleRoutes: Record<string, string> = {
+        ROLE_USER: "/dashboard/user/resume",
+        ROLE_OPERATOR: "/dashboard/operator/resume",
+        ROLE_ADMIN: "/dashboard/admin/administrators",
+    };
+
     // Función para manejar el envío del formulario
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -23,8 +29,9 @@ const LoginPage = () => {
         const credentials: LoginRequestDto = { username, password, };
         try {
             // Pasamos el objeto credentials
-            await login(credentials);
-            navigate('/');
+            const role = await login(credentials);
+            const redirectPath = roleRoutes[role] || '/'
+            navigate(redirectPath);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Error inesperado');
         } finally {
