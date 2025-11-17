@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Form, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { UserDto } from "../../../../core/models/dto/UserDto";
+import { ResumeDto } from "../../../../core/models/dto/ResumeDto";
 import { addData, getData } from "../../../../core/services/apiService";
 import ReusableTable from "../../../../shared/components/table/ReusableTable";
 import { TableColumnDefinition } from "../../../../core/models/types/TableTypes";
@@ -21,10 +22,11 @@ const ReadingTakePage: React.FC = () => {
     const [selectedDistrict, setSelectedDistrict] = useState<string>("");
     const [uniqueStreets, setUniqueStreets] = useState<string[]>([]);
     const [uniqueDistricts, setUniqueDistricts] = useState<string[]>([]);
-
+    const [period, setPeriod] = useState<ResumeDto | null>(null);
     // Obtener datos al cargar el componente
     useEffect(() => {
         fetchData();
+        handlePeriod();
     }, []);
 
     // Manejar todos los filtros
@@ -83,6 +85,14 @@ const ReadingTakePage: React.FC = () => {
         setFilteredData(filtered);
     };
 
+    const handlePeriod = async()=>{
+        try{
+            const response = await getData<ResumeDto>(`/operator/resume-supplier`)
+            setPeriod(response)
+        }catch(e){
+            console.error(e)
+        }
+    }
 
     // Manejar añadir nueva lectura
     const handleAddReading = async (idUser: number, readingValue: number) => {
@@ -122,7 +132,8 @@ const ReadingTakePage: React.FC = () => {
 
     return (
         <div>
-            <h1 className="text-center">Toma de Lecturas</h1>
+            <h1 className="text-center">Cargar de Lecturas</h1>
+            <h3 className="text-center mb-4">Periodo: {period?.dateActivePeriod ? new Date(period?.dateActivePeriod).toLocaleDateString(): "No disponible"  } </h3>
             {loading ? (
                 <div className="d-flex flex-column justify-content-center align-items-center vh-100">
                     <span className="mb-2 fw-bold">CARGANDO...</span>
