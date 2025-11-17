@@ -166,7 +166,7 @@ const UserReadingsModal: React.FC<UserReadingsModalProps> = ({
                           variant="warning"
                           onClick={() => handleEdit(reading)}
                         >
-                          Editar
+                          {reading.reading > 0 ? "Actualizar" : "Cargar lectura"}
                         </Button>
                       )}
                     </td>

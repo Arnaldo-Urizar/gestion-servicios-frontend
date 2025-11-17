@@ -82,7 +82,7 @@ const Resume = () => {
         color: "#dc3545",
       },
       {
-        title: "Lecturas Realizadas",
+        title: "Total de Lecturas",
         value: data?.fullReadings || 0,
         color: "#007bff",
       },

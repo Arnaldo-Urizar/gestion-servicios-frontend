@@ -97,8 +97,14 @@ const ReadingTakePage: React.FC = () => {
     // Manejar añadir nueva lectura
     const handleAddReading = async (idUser: number, readingValue: number) => {
         try {
-            await addData(`/operator/register-reading-active/${idUser}/${readingValue}`, {});
+            await addData(`/operator/update-reading-active/${idUser}/${readingValue}`, {});
             toast.success("Lectura creada exitosamente");
+            
+            // actualiza la lista de usuarios quitando al que se acaba de actualizar
+            setUsers(prevUsers => prevUsers.filter(user => user.idUser !== idUser));
+            // actualiza la lista filtrada de la misma forma
+            setFilteredData(prevFiltered => prevFiltered.filter(user => user.idUser !== idUser));
+
             setShowAddReadingModal(false);
         } catch (error) {
             console.error(error);
