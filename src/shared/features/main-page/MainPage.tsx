@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { FaStar, FaRocket, FaCode } from "react-icons/fa";
+import { FaStar,FaHistory,FaFileInvoice,FaCreditCard } from "react-icons/fa";
 import { getData } from "../../../core/services/apiService";
 import { MainInfoDto } from "../../../core/models/dto/MainInfoDto";
-import { getCookie, setCookie } from "../../../core/utils/cookiesUtils";
 
 const MainPage: React.FC = () => {
 
@@ -13,43 +12,34 @@ const MainPage: React.FC = () => {
 
   //Hook para obtener los datos de la API de información principal
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Verificar si la información está en una cookie
-        const cookieData = getCookie("mainInfo");
-        if (cookieData) {
-          // Si existe, usar la información de la cookie
-          setData(JSON.parse(cookieData));
-        } else {
-          // Si no existe, hacer la petición al backend
-          const response = await getData<MainInfoDto>("/info/data-main");
-          setData(response);
-          // Almacenar la información en una cookie (válida por 7 días)
-          setCookie("mainInfo", JSON.stringify(response), 7);
-        }
-      } catch (error) {
-        console.error(error);
-        setError("Error al cargar la información principal");
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchData();
   }, []);
 
+  const fetchData = async () => {
+    try {
+      const response = await getData<MainInfoDto>("/info/data-main");
+      setData(response);
+    } catch (error) {
+      console.error(error);
+      setError("Error al obtener la información principal");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   //Iconos para las funcionalidades
   const featureIcons: { [key: number]: JSX.Element } = {
-    1: <FaRocket size={50} className="text-primary mb-3" />, // Icono cohete
-    2: <FaStar size={50} className="text-primary mb-3" />, // Icono estrella
-    3: <FaCode size={50} className="text-primary mb-3" />, // Icono código
+    1: <FaCreditCard size={50} className="text-primary mb-3" />, // Icono cohete
+    2: <FaFileInvoice size={50} className="text-primary mb-3" />, // Icono estrella
+    3: <FaHistory size={50} className="text-primary mb-3" />, // Icono código
   };
 
   //Bordes para los planes
   const planBorder: { [key: number]: string } = {
-    1: "border-success", // Borde verde
-    2: "border-primary", // Borde azul
-    3: "border-warning", // Borde amarillo
-    4: "border-danger", // Borde rojo
+    1: "border-primary", // Borde azul
+    2: "border-primary", //
+    3: "border-primary", //
+    4: "border-primary", //
   };
 
   //Renderizado condicional para manejar los estados de carga y error
@@ -71,16 +61,16 @@ const MainPage: React.FC = () => {
             {data?.description}
           </p>
           <a href="#features" className="btn btn-light btn-lg mt-4">
-            Conoce más
+            Conocer más
           </a>
         </div>
       </header>
       {/* Features Section */}
       <section id="features" className="py-5 bg-light">
         <div className="container text-center">
-          <h2 className="fw-bold">Características Principales</h2>
+          <h2 className="fw-bold">Servicios Principales</h2>
           <p className="text-muted">Todo lo que necesitas en un solo lugar.</p>
-          <div className="row mt-4">
+          <div className="row mt-5">
             {/* Iterar sobre los features */}
             {data?.features.map((feature) => (
               <div className="col-md-4" key={(feature.idFeature)}>
@@ -96,8 +86,8 @@ const MainPage: React.FC = () => {
       {/* Pricing Section */}
       <section id="pricing" className="py-5">
         <div className="container text-center">
-          <h2 className="fw-bold">Planes de Precios</h2>
-          <p className="text-muted">Elige el plan que mejor se adapte a tus necesidades.</p>
+          <h2 className="fw-bold">Planes y Tarifas</h2>
+          <p className="text-muted">Elegí el plan que mejor se adapte a tus necesidades.</p>
           <div className="row mt-4">
             {/* Iterar sobre los planes */}
             {data?.plans.map((fee) => (
@@ -107,7 +97,7 @@ const MainPage: React.FC = () => {
                     <h5 className="card-title fw-bold">{fee.name}</h5>
                     <h6 className="card-price">${fee.price}</h6>
                     <p className="text-muted">{fee.description}</p>
-                    <p className="text-muted">Consumo max: {fee.consumptionMax}{data.unitActive}</p>
+                    <p className="text-muted"><b>Consumo máximo:</b> {fee.consumptionMax} {data.unitActive}</p>
                   </div>
                 </div>
               </div>

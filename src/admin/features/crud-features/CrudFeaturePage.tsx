@@ -32,7 +32,7 @@ const CrudFeaturePage = () => {
             const response = await getData<FeatureDto[]>("/admin/features");
             setFeatureData(response);
         } catch (error) {
-            console.error("Error fetching feature data:", error);
+            console.error(error);
             setError("Error al cargar las funcionalidades.");
         } finally {
             setLoading(false);
@@ -44,8 +44,8 @@ const CrudFeaturePage = () => {
         if (!featureToDelete) return;
         setIsDeleting(true);
         try {
-            await deleteData("/admin/delete-feature?idFeature", featureToDelete.idFeature);
-            toast.success("Funció eliminada exitosamente");
+            await deleteData("/admin/feature?idFeature", featureToDelete.idFeature);
+            toast.success("Función eliminada exitosamente");
             fetchData();
         } catch (error) {
             console.error(error);

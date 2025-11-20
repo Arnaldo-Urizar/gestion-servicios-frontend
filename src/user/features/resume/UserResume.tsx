@@ -163,7 +163,7 @@ const UserResume = () => {
                                             <YAxis />
                                             <Tooltip content={<CustomTooltip />} />
                                             <Legend />
-                                            <Bar dataKey="consumption" fill="#007bff" />
+                                            <Bar dataKey="consumption" fill="#007bff" name="Consumo (m³)"/>
                                         </BarChart>
                                     </ResponsiveContainer>
                                 </Card.Body>
