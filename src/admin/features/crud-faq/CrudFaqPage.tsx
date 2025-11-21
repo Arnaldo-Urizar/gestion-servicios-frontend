@@ -7,6 +7,7 @@ import { Button, Spinner } from "react-bootstrap";
 import ReusableTable from "../../../shared/components/table/ReusableTable";
 import AddEditFaqModal from "./AddEditFaqModal";
 import ConfirmModal from "../../../shared/components/confirm/ConfirmModal";
+import { clearFaqCache } from "../../../core/utils/homeCache";
 
 const CrudFaqPage = () => {
 
@@ -46,7 +47,9 @@ const CrudFaqPage = () => {
         try {
             await deleteData("/admin/delete-faq?idFaq", faqToDelete.idFaq);
             toast.success("Faq eliminado exitosamente");
+            clearFaqCache();
             fetchData();
+
         } catch (error) {
             console.error(error);
             toast.error(error instanceof Error ? error.message : "Error al eliminar la faq");
@@ -63,12 +66,14 @@ const CrudFaqPage = () => {
             //Actualizar registro
             if (faq.idFaq) {
                 await updateData("/admin/update-faq?idFaq", faq.idFaq, faq);
+                clearFaqCache();
                 toast.success("Faq actualizado exitosamente");
             }
             // Añadir registro
             else {
                 await addData("/admin/register-faq", faq);
                 toast.success("Faq creado exitosamente");
+                clearFaqCache();
             }
             setSelectedFaq(faq);
             setShowModal(false);
@@ -140,8 +145,8 @@ const CrudFaqPage = () => {
                         title="Confirmar Eliminación"
                         message={
                             <>
-                                ¿Estás seguro que deseas eliminar la pregunta:
-                                <strong> {faqToDelete?.question}</strong>?
+                                ¿Estás seguro de que deseas eliminar la pregunta:
+                                <strong>"{faqToDelete?.question}"</strong>?
                             </>
                         }
                         confirmText="Confirmar"

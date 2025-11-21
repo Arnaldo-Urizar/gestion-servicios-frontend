@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaStar,FaHistory,FaFileInvoice,FaCreditCard } from "react-icons/fa";
 import { getData } from "../../../core/services/apiService";
 import { MainInfoDto } from "../../../core/models/dto/MainInfoDto";
+import { getHomeCache,setHomeCache} from "../../../core/utils/homeCache";
 
 const MainPage: React.FC = () => {
 
@@ -17,7 +18,16 @@ const MainPage: React.FC = () => {
 
   const fetchData = async () => {
     try {
+      const cache = getHomeCache();
+      // Si hay datos en caché setea el estado
+      if (cache){
+        setData(cache);
+        setLoading(false);
+        return
+      } 
+      // Si no hay datos en cache los obtiene de la api
       const response = await getData<MainInfoDto>("/info/data-main");
+      setHomeCache(response)
       setData(response);
     } catch (error) {
       console.error(error);

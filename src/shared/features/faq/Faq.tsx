@@ -2,58 +2,29 @@ import React, { useEffect, useState } from "react";
 import "./Faq.css";
 import { getData } from "../../../core/services/apiService";
 import { FaqDto } from "../../../core/models/dto/FaqDto";
-import { MainInfoDto } from "../../../core/models/dto/MainInfoDto";
-import { getCookie, setCookie } from "../../../core/utils/cookiesUtils";
+import { setFaqCache, getFaqCache } from "../../../core/utils/homeCache";
 
 const Faq: React.FC = () => {
-    const [dataMain, setDataMain] = useState<MainInfoDto | null>(null);
     const [dataFaq, setDataFaq] = useState<FaqDto[]>([])
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
-    //Hook para obtener los datos de la API de información principal
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                // Verificar si la información está en una cookie
-                const cookieData = getCookie("mainInfo");
-                if (cookieData) {
-                    // Si existe, usar la información de la cookie
-                    setDataMain(JSON.parse(cookieData));
-                } else {
-                    // Si no existe, hacer la petición al backend
-                    const response = await getData<MainInfoDto>("/info/data-main");
-                    setDataMain(response);
-                    // Almacenar la información en una cookie (válida por 7 días)
-                    setCookie("mainInfo", JSON.stringify(response), 7);
-                }
-            } catch (error) {
-                console.error(error);
-                setError("Error al cargar la información principal");
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchData();
-    }, []);
 
     //Hook para obtener los datos de la API faq
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Verificar si la información está en una cookie
-                const cookieData = getCookie("faqInfo");
-                if (cookieData) {
-                    // Si existe, usar la información de la cookie
-                    setDataFaq(JSON.parse(cookieData));
-                } else {
-                    // Si no existe, hacer la petición al backend
-                    const response = await getData<FaqDto[]>("/info/faq");
-                    setDataFaq(response);
-                    // Almacenar la información en una cookie (válida por 7 días)
-                    setCookie("faqInfo", JSON.stringify(response), 7);
+                const faqCache = getFaqCache()
+                if(faqCache){
+                    setDataFaq(faqCache)
+                    setLoading(false)
+                    return
                 }
+                const response = await getData<FaqDto[]>("/info/faq");
+                setFaqCache(response)
+                setDataFaq(response);
+
             } catch (error) {
                 console.error("Error fetching FAQ data:", error);
                 setError("Error al cargar las preguntas frecuentes.");
@@ -86,11 +57,7 @@ const Faq: React.FC = () => {
             {/* Header Section */}
             <header className="bg-primary text-white text-center py-5">
                 <div className="container">
-                    <h1 className="fw-bold">{dataMain?.name}</h1>
-                    <p className="lead mt-3">{dataMain?.description}</p>
-                    <p className="lead mt-3">
-                        FAQ - Preguntas Frecuentes
-                    </p>
+                    <h2 className="fw-light">FAQ - Preguntas Frecuentes</h2>
                 </div>
             </header>
             {/* Features Section */}

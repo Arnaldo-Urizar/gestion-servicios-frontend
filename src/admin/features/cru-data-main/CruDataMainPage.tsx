@@ -3,6 +3,7 @@ import { getData, updateData } from "../../../core/services/apiService";
 import { toast } from "react-toastify";
 import { Spinner, Card, Button } from "react-bootstrap";
 import { Supplier } from "../../../core/models/dto/SupplierDto";
+import { clearHomeCache } from "../../../core/utils/homeCache";
 
 const CruDataMainPage = () => {
     const [mainData, setMainData] = useState<Supplier | any>(null);
@@ -26,7 +27,7 @@ const CruDataMainPage = () => {
                 setError("No hay datos disponibles.");
             }
         } catch (error) {
-            console.error("Error fetching feature data:", error);
+            console.error(error);
             setError("Error al cargar la información.");
         } finally {
             setLoading(false);
@@ -41,6 +42,7 @@ const CruDataMainPage = () => {
             await updateData("/admin/update-supplier?idSupplier", mainData.idSupplier, updatedSupplier);
             toast.success("Datos actualizados exitosamente");
             setEditingField(null);
+            clearHomeCache();
             fetchData();
         } catch (error) {
             console.error(error);

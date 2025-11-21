@@ -3,7 +3,6 @@ import { FaFacebookSquare, FaInstagramSquare, FaWhatsappSquare } from "react-ico
 import { Link } from "react-router-dom";
 import { getData } from "../../../core/services/apiService";
 import { FooterInfoDto } from "../../../core/models/dto/FooterInfoDto";
-import { getCookie, setCookie } from "../../../core/utils/cookiesUtils";
 
 const Footer: React.FC = () => {
 
@@ -16,20 +15,11 @@ const Footer: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Verificar si la información está en una cookie
-                const cookieData = getCookie("footerInfo");
-                if (cookieData) {
-                    // Si existe, usar la información de la cookie
-                    setData(JSON.parse(cookieData));
-                } else {
-                    const response = await getData<FooterInfoDto>("/info/footer");
-                    setData(response);
-                    // Almacenar la información en una cookie (válida por 7 días)
-                    setCookie("footerInfo", JSON.stringify(response), 7);
-                }
+                const response = await getData<FooterInfoDto>("/info/footer");
+                setData(response);
             } catch (error) {
                 console.error(error);
-                setError("Error al cargar la información principal");
+                setError("No se pudo cargar la cargar la información principal");
             } finally {
                 setLoading(false);
             }
