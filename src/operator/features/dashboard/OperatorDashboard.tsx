@@ -126,7 +126,13 @@ const DashboardOperator: React.FC = () => {
                                     <span className="ms-2 d-none d-lg-inline">Conceptos</span>
                                 </Link>
                             </li>
-
+                            {/* Historial de remplazo de medidores*/}
+                            <li className="nav-item">
+                                <Link to="/dashboard/operator/meters/change-history" className={`nav-link link-light py-3 px-2 d-flex align-items-center ${currentPath === '/dashboard/operator/meters/change-history' ? 'active' : ''}`} title="Historial de remplazo de medidores">
+                                    <i className="bi bi-clock-history fs-4"></i>
+                                    <span className="ms-2 d-none d-lg-inline">Medidores</span>
+                                </Link>
+                            </li>
                             {/* Reportes */}
                             <li className="nav-item">
                                 <Link to="/dashboard/operator/reports" className={`nav-link link-light py-3 px-2 d-flex align-items-center ${currentPath === '/dashboard/operator/reports' ? 'active' : ''}`} title="Generar Reportes">

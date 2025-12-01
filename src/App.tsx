@@ -37,6 +37,7 @@ import UserConsumptions from "./user/features/consumptions/UserConsumptions";
 import UserPersonalData from "./user/features/personaldata/UserPersonalData";
 import UserResume from "./user/features/resume/UserResume";
 import ModalityPage from "./admin/features/modality/ModalityPage";
+import MeterHistory  from "./operator/features/meters/MeterHistory";
 
 const App: React.FC = () => {
   return (
@@ -70,6 +71,7 @@ const App: React.FC = () => {
           <Route path="bills/bulk-generate" element={<BillBulkGeneratePage />} />
           <Route path="bills/individual-generate" element={<BillIndividualGeneratePage />} />
           <Route path="bills/management" element={<BillManagementPage />} />
+          <Route path="meters/change-history" element={<MeterHistory/>} />
           <Route path="reports" element={<ReportsPage />} />
         </Route>
 
