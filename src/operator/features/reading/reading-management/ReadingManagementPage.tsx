@@ -8,7 +8,6 @@ import { TableColumnDefinition } from "../../../../core/models/types/TableTypes"
 import AddReadingModal from "./AddReadingModal";
 import SearchBar from "../../../../shared/components/searcher/SearchBar";
 import UserReadingsModal from "./UserReadingModal";
-import { Eye } from "react-bootstrap-icons";
 
 const ReadingManagementPage: React.FC = () => {
   // Estados
@@ -108,9 +107,7 @@ const ReadingManagementPage: React.FC = () => {
               setSelectedUser(row);
               setShowUserReadings(true);
             }}
-          >
-            Mirar <Eye height={24} width={24} />
-          </Button>
+          >Gestionar lecturas</Button>
         </div>
       ),
     },

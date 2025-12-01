@@ -46,7 +46,7 @@ const ResetPasswordPage = () => {
         <div className="container py-5">
             <div className="row justify-content-center">
                 <div className="col-md-6">
-                    <div className="card">
+                    <div className="card p-4">
                         <div className="card-body">
                             <h1 className="text-center">Restablecer Contraseña</h1>
                             {success ? (

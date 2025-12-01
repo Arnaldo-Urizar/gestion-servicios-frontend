@@ -28,35 +28,37 @@ const ForgotPasswordPage = () => {
     <div className="container py-5 h-100">
       <div className="row justify-content-center h-100">
         <div className="col-md-6 my-auto">
-          <div className="card">
-            <div className="card-body">
+          <div className="card p-4" style={{ minHeight: "300px" }}>
+            <div className="card-body d-flex flex-column">
               <h1 className="text-center">Recuperar Contraseña</h1>
-              <form onSubmit={handleSubmit}>
-                {success ? (
-                  <div className="alert alert-success">
-                    Correo enviado con instrucciones para restablecer tu contraseña. Por favor revisa tu bandeja de entrada.
-                  </div>
-                ) : (
-                  <>
-                    {error && <div className="alert alert-danger">{error}</div>}
-                    <div className="mb-3">
-                      <label className="form-label">Email</label>
-                      <input
-                        type="email"
-                        placeholder="Ingresa tu correo electrónico"
-                        className="form-control"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        disabled={loading}
-                      />
+               <div className="d-flex flex-column justify-content-center flex-grow-1">
+                <form onSubmit={handleSubmit}>
+                  {success ? (
+                    <div className="alert alert-success">
+                      Correo enviado con instrucciones para restablecer tu contraseña. Por favor revisa tu bandeja de entrada.
                     </div>
-                    <button type="submit" className="btn btn-primary w-100" disabled={loading}>
-                      {loading ? "Enviando..." : "Enviar"}
-                    </button>
-                  </>
-                )}
-              </form>
+                  ) : (
+                    <>
+                      {error && <div className="alert alert-danger">{error}</div>}
+                      <div className="mb-3">
+                        <label className="form-label">Email</label>
+                        <input
+                          type="email"
+                          placeholder="Ingresa tu correo electrónico"
+                          className="form-control"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          required
+                          disabled={loading}
+                        />
+                      </div>
+                      <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+                        {loading ? "Enviando..." : "Enviar"}
+                      </button>
+                    </>
+                  )}
+                </form>
+              </div>
             </div>
           </div>
         </div>
