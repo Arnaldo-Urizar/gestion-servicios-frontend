@@ -123,7 +123,6 @@ const UserResume = () => {
     // Render
     return (
         <div>
-            <h1 className="text-center">Resumen de {data?.userName} {data?.userLastName}</h1>
 
             {/* Mostrar el mensaje de carga mientras los datos se están cargando */}
             {loading ? (
@@ -135,6 +134,7 @@ const UserResume = () => {
                 <div className="text-center py-5">{error}</div>
             ) : (
                 <div>
+                    <h1 className="text-center">Resumen de {data?.userName} {data?.userLastName}</h1>
                     {/* Tarjetas de resumen */}
                     <Row className="mb-2">
                         {summaryData.map((item, index) => (
