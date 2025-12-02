@@ -8,9 +8,7 @@ import {
   Cash,
   FileEarmarkText,
   Activity,
-  FileEarmarkPdfFill,
-  EyeSlashFill,
-  EyeFill,
+  FileEarmarkPdfFill
 } from "react-bootstrap-icons";
 import "./ReportPage.css";
 import { processReportData } from "../../../core/utils/flattenObject";
@@ -31,11 +29,6 @@ interface ReportConfig {
 const ReportPage = () => {
   // Estados
   const [loadingReport, setLoadingReport] = useState<string | null>(null);
-  const [mostrarReporte, setMostrarReporte] = useState(false);
-
-  const toggleReporte = () => {
-    setMostrarReporte((prev) => !prev);
-  };
 
   // Reportes
   const REPORTS: ReportConfig[] = [
@@ -193,9 +186,22 @@ const ReportPage = () => {
   // Render
   return (
     <div className="report-page">
-      <h1 className="text-center mb-5">Gestión de Reportes</h1>
-      <Container>
-        <Row className="g-4" xs={1} md={2} lg={4}>
+      {/* <h1 className="text-center mb-5">Gestión de Reportes</h1> */}
+      <Container>        
+        <ReporteGeneral />
+        <div className="text-center mb-5">
+          <Button
+            onClick={exportarAPDF}
+            variant="danger"
+            size="sm"
+            className="me-2"
+          >
+            <FileEarmarkPdfFill className="me-2" />
+            Exportar a PDF
+          </Button>
+        </div>
+        
+        <Row className="g-4" xs={1} md={2} lg={4} style={{ backgroundColor: "#f8f9fa", padding: "20px" }}>
           {REPORTS.map((report) => (
             <Col key={report.id}>
               <Card
@@ -224,35 +230,6 @@ const ReportPage = () => {
             </Col>
           ))}
         </Row>
-
-        <Col className="mt-5 d-flex justify-content-center align-items-center gap-3">
-          {/* Botón de Mostrar/Ocultar Reporte */}
-          <Button onClick={toggleReporte} variant="primary" size="lg">
-            {mostrarReporte ? (
-              <>
-                <EyeSlashFill className="me-2" /> Ocultar Reporte
-              </>
-            ) : (
-              <>
-                <EyeFill className="me-2" /> Mostrar Reporte General del sistema
-              </>
-            )}
-          </Button>
-
-          {mostrarReporte && (
-            <Button
-              onClick={exportarAPDF}
-              variant="danger"
-              size="lg"
-              className="me-2"
-            >
-              <FileEarmarkPdfFill className="me-2" />
-              Exportar a PDF
-            </Button>
-          )}
-        </Col>
-
-        {mostrarReporte && <ReporteGeneral />}
       </Container>
     </div>
   );

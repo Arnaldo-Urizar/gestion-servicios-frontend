@@ -156,7 +156,7 @@ const AddEditHistoryModal: React.FC<AddEditHistoryModalProps> = ({show,onHide,us
             </Modal.Header>
 
             <Modal.Body>
-               <Button className="mb-3" onClick={handleCreate}> + Agregar registro </Button>
+               <Button className="mb-3" onClick={handleCreate}> Agregar registro </Button>
                   {loading ? (
                      <p className="text-center">Espera un momento...</p>
                   ) : (
