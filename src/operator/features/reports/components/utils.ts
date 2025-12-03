@@ -20,7 +20,7 @@ export const exportarAPDF = () => {
       quality: 0.95,
     },
     html2canvas: {
-      scale: 2,
+      scale: 1.2,
       logging: true,
       letterRendering: true,
     },

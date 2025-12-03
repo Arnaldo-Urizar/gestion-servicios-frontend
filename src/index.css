@@ -29,3 +29,9 @@ body {
 .custom-switch-container .form-check-input {
   cursor: pointer;
 }
+
+/* Evitar que una sección se divida entre páginas */
+.avoid-page-break {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}

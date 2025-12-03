@@ -17,13 +17,14 @@ import {
 import {
   PeopleFill,
   Water,
-  CurrencyDollar,
+  // CurrencyDollar,
   FileCheck,
 } from "react-bootstrap-icons";
 import { useEffect, useState } from "react";
 import { getData } from "../../../../core/services/apiService";
 import { UserDto } from "../../../../core/models/dto/UserDto";
 import { FeeDto } from "../../../../core/models/dto/FeeDto";
+import { BillDetailsDto } from "../../../../core/models/dto/BillDetailsDto";
 
 // --- DATOS ESTÁTICOS DE EJEMPLO ---
 
@@ -35,27 +36,44 @@ const COLORS = ["#0088FE", "#FF8042"];
  */
 const ReporteGeneral = () => {
   const [fees, setFees] = useState<FeeDto[]>([]);
+  const [bills, setBill] = useState<BillDetailsDto[]>([]);
   const [user, setUsers] = useState<UserDto[]>([]);
   const [loading, setLoading] = useState(false);
   const [, setError] = useState<string | null>(null);
   const [filteredData, setFilteredData] = useState<UserDto[]>([]);
+ 
+  //Totales
+  const [billUnPaid, setbillUnPaid] = useState(0); // Facturas impagas
+  const [billPaid, setbillPaid] = useState(0); // Facturas pagas
 
   // Función para obtener el resumen de los datos
   useEffect(() => {
     fetchData();
   }, []);
 
+  useEffect(()=>{
+    const totalPaid = calculateTotal(bills,true);
+    setbillPaid(totalPaid)
+    
+    const totalUnPaid = calculateTotal(bills,false);
+    setbillUnPaid(totalUnPaid);
+  },[bills])
+
   // Obtener datos de la api
   const fetchData = async () => {
     setLoading(true);
     try {
       // Obtener usuarios
-      const users = await getData<UserDto[]>("/operator/users");
+      const users = await getData<UserDto[]>("/operator/users-actives");
       setUsers(users);
       setFilteredData(users);
       // Obtener tarifas
       const feeData = await getData<FeeDto[]>("/operator/fee");
       setFees(feeData);
+      const bills = await getData<BillDetailsDto[]>("/operator/latest-bill/active-users");
+      console.log(bills)
+      setBill(bills);
+
     } catch (error) {
       console.error(error);
       setError("Error al cargar la información principal");
@@ -64,6 +82,12 @@ const ReporteGeneral = () => {
     }
   };
 
+  // Funcion genérica para calcular total de facturas pagas e impagas
+  const calculateTotal = (bills: BillDetailsDto[], paid: boolean) =>
+    bills
+      .filter(b => b.paidStatus === paid)
+      .reduce((sum, b) => sum + b.total, 0);
+
   const kpiData = [
     {
       label: "Total de Medidores",
@@ -71,12 +95,12 @@ const ReporteGeneral = () => {
       icon: Water,
       variant: "primary",
     },
-    {
-      label: "% Facturas Pagadas",
-      value: "89.5%",
-      icon: CurrencyDollar,
-      variant: "success",
-    },
+    // {
+    //   label: "% Facturas Pagadas",
+    //   value: `100 %`,
+    //   icon: CurrencyDollar,
+    //   variant: "success",
+    // },
     {
       label: "Usuarios Activos",
       value: user.length,
@@ -85,7 +109,7 @@ const ReporteGeneral = () => {
     },
     {
       label: "Monto Adeudado ($)",
-      value: "1,250,000",
+      value: billUnPaid,
       icon: FileCheck,
       variant: "danger",
     },
@@ -104,8 +128,8 @@ const ReporteGeneral = () => {
   }));
 
   const estadoCobranza = [
-    { name: "Pagado", value: 9500000 },
-    { name: "Pendiente", value: 1250000 },
+    { name: "Pagado", value: billPaid },
+    { name: "Pendiente", value: billUnPaid },
   ];
 
   const monthsOrder = [
@@ -284,7 +308,7 @@ const ReporteGeneral = () => {
 
         {/* GRÁFICO 3: Crecimiento de Usuarios */}
         <Col md={12}>
-          <Card className="shadow-sm">
+          <Card className="shadow-sm avoid-page-break mb-4">
             <Card.Body>
               <Card.Title>
                 Crecimiento Mensual de Usuarios Registrados
