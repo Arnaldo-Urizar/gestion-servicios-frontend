@@ -68,8 +68,7 @@ const UserParametersModal: React.FC<UserParametersModalProps> = ({ show, onHide,
     const handleSave = async (idPendingBillDetail: number) => {
         setSaving(true);
         try {
-            await updateData(`/operator/pending-details/update?idReading`, idPendingBillDetail, { idBillingParameter: tempData.billingParameterId, value: tempData.value }
-            );
+            await updateData(`/operator/pending-details/update?idPendingBillDetail`, idPendingBillDetail, { idBillingParameter: tempData.billingParameterId, value: tempData.value });
             toast.success("Concepto actualizado");
             setParameters(parameters.map(p => p.idPendingBillDetail === idPendingBillDetail ? {
                 ...p,
@@ -98,7 +97,7 @@ const UserParametersModal: React.FC<UserParametersModalProps> = ({ show, onHide,
         if (!parameterToDelete) return;
         setIsDeleting(true);
         try {
-            await deleteData(`/operator/pending-details/?idPendingBillDetail`, parameterToDelete);
+            await deleteData(`/operator/pending-details/delete?idPendingBillDetail`, parameterToDelete);
             toast.success("Concepto eliminado");
             setParameters(parameters.filter(p => p.idPendingBillDetail !== parameterToDelete));
         } catch (error) {
