@@ -9,12 +9,12 @@ const UserDashboard: React.FC = () => {
     const currentPath = location.pathname;
 
     return (
-        <div className="container-fluid">
-            <div className="row">
+        <div className="container-fluid p-0">
+            <div className="d-flex flex-column flex-md-row">
 
                 {/* Sidebar */}
-                <div className="bg-primary sticky-top sidebar">
-                    <div className="d-flex flex-sm-column flex-row flex-nowrap bg-primary align-items-center">
+                <div className="sidebar bg-primary">
+                    <div className="sidebar-inner">
                         <ul className="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-center justify-content-between w-100 px-3">
 
                             {/* Resumen */}
@@ -53,10 +53,8 @@ const UserDashboard: React.FC = () => {
                 </div>
 
                 {/* Main Content */}
-                <div className="col-sm p-3 min-vh-100">
-                    <main className="p-4">
-                        <Outlet /> {/* Aquí se cargarán las secciones dinámicamente */}
-                    </main>
+                <div className="flex-grow-1 main-content p-4">
+                    <Outlet /> {/* Aquí se cargarán las secciones dinámicamente */}
                 </div>
             </div>
         </div>

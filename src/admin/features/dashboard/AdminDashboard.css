@@ -1,10 +1,83 @@
+
+   /* SIDEBAR (DESKTOP) */
+   
+/* Ancho fijo en desktop */
 .sidebar {
     width: 180px;
     min-width: 160px;
     max-width: 200px;
+    min-height: 100vh;
+    position: sticky;
+    top: 0;
 }
 
-/* Estilos del popover personalizado */
+/* Contenedor interno del menú */
+.sidebar-inner {
+    width: 100%;
+}
+
+/* Estilos del menú */
+.sidebar .nav-link {
+    height: 50px;
+    transition: all 0.3s ease;
+    position: relative;
+    border-radius: 4px;
+    margin: 6px -3px;
+}
+
+.sidebar .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+    transform: translateX(3px);
+}
+
+/* Ítem activo */
+.sidebar .nav-link.active,
+.sidebar .nav-link.active-submenu {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    border-left: 3px solid #fff;
+    margin-left: -25px;
+}
+
+/* Borde animado */
+.sidebar .nav-link.active::before,
+.sidebar .nav-link.active-submenu::after {
+    content: '';
+    position: absolute;
+    left: -3px;
+    top: 0;
+    height: 100%;
+    width: 3px;
+    background-color: #fff;
+    animation: border-glow 1.5s infinite ease-in-out;
+}
+
+@keyframes border-glow {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
+
+/* Chevron desktop */
+.chevron-icon {
+    transition: transform 0.3s ease;
+}
+
+.chevron-icon.rotate {
+    transform: rotate(180deg);
+}
+
+
+   /* MAIN CONTENT */
+.main-content {
+    min-height: 100vh; /* evita saltos */
+    background-color: #f8f9fa; /* opcional, estética */
+}
+
+
+   /* SUBMENU POPOVER */
+
 .submenu-popover {
     background-color: #f8f9fa;
     border: 1px solid rgba(0, 0, 0, .15);
@@ -28,91 +101,60 @@
     color: rgb(0, 0, 0) !important;
 }
 
-/* Mejor usar padding que text-indent */
-.text-indented {
-    padding-left: 1rem !important;
-}
 
-/* Animación del chevron corregida */
-.chevron-icon {
-    transition: transform 0.3s ease;
-    transform: rotate(0deg);
-}
+/* RESPONSIVE (MOBILE ≤ 768px) */
 
-.chevron-icon.rotate {
-    transform: rotate(180deg);
-}
-
-/* Efectos hover y activo para los elementos del sidebar */
-.sidebar .nav-link {
-    height: 50px;
-    transition: all 0.3s ease;
-    position: relative;
-    border-radius: 4px;
-    margin: 6px -3px;
-}
-
-/* Efecto de iluminación al pasar el mouse */
-.sidebar .nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-    box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
-    transform: translateX(3px);
-}
-
-/* Estilo para el ítem activo */
-.sidebar .nav-link.active {
-    background-color: rgba(255, 255, 255, 0.15) !important;
-    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
-    border-left: 3px solid #fff;
-    margin-left: -25px;
-}
-
-/* Borde izquierdo animado para el ítem activo */
-.sidebar .nav-link.active::before {
-    content: '';
-    position: absolute;
-    left: -3px;
-    top: 0;
-    height: 100%;
-    width: 3px;
-    background-color: #fff;
-    animation: border-glow 1.5s infinite ease-in-out;
-}
-
-/* Estilo para el ítem activo */
-.sidebar .nav-link.active-submenu {
-    background-color: rgba(255, 255, 255, 0.15) !important;
-    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
-    border-left: 3px solid #fff;
-    margin-left: -25px;
-}
-
-/* Borde izquierdo animado para el ítem activo */
-.sidebar .nav-link.active-submenu::after {
-    content: '';
-    position: absolute;
-    left: -3px;
-    top: 0;
-    height: 100%;
-    width: 3px;
-    background-color: #fff;
-    animation: border-glow 1.5s infinite ease-in-out;
-}
-
-.sidebar .nav-link:hover {
-    margin-left: -25px;
-}
-
-@keyframes border-glow {
-    0% { opacity: 0.5; }
-    50% { opacity: 1; }
-    100% { opacity: 0.5; }
-}
-
-/* Ajuste del sidebar en pantallas pequeñas */
 @media (max-width: 768px) {
+
+    /* Sidebar ocupa todo el ancho */
     .sidebar {
+        position: relative;
         width: 100%;
         min-width: 100%;
+        max-width: 100%;
+        min-height: auto;
+        height: auto;
+        top: 0;
+    }
+
+    /* Aseguramos que el contenedor interno no sea flex-row */
+    .sidebar-inner {
+        display: block;
+        width: 100%;
+    }
+
+    /* Menú se vuelve horizontal */
+    .sidebar .nav {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between;
+        flex-wrap: nowrap;
+        gap: 0.5rem;
+        width: 100%;
+        padding: 0.5rem 0;
+    }
+
+    /* Cada item ocupa solo el ancho necesario */
+    .sidebar .nav-item {
+        flex: 1 0 auto;
+        display: flex;
+        justify-content: center;
+    }
+
+    /* Quitar efectos de hover que desplazan */
+    .sidebar .nav-link:hover {
+        margin-left: 0 !important;
+        transform: none !important;
+    }
+
+    /* Quitar margin-left del activo (muy importante) */
+    .sidebar .nav-link.active,
+    .sidebar .nav-link.active-submenu {
+        margin-left: 0 !important;
+    }
+
+    /* Ocultar chevron (rompe el layout horizontal) */
+    .sidebar .chevron-icon {
+        display: none;
     }
 }

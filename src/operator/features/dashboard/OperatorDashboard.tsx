@@ -147,9 +147,6 @@ const DashboardOperator: React.FC = () => {
                 {/* Main Content */}
                 <div className="flex-grow-1 main-content p-4">
                     <Outlet /> {/* Aquí se cargarán las secciones dinámicamente */}
-                    {/* <main className="p-4"> */}
-                        {/* <Outlet /> Aquí se cargarán las secciones dinámicamente */}
-                    {/* </main>} */}
                 </div>
             </div>
         </div>
